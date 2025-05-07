@@ -1,3 +1,16 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
+  }
+}
+
 provider "aws" {
   region                      = "us-east-1"
   access_key                  = "test"
@@ -10,7 +23,15 @@ provider "aws" {
   }
 }
 
+resource "random_id" "instance_suffix" {
+  byte_length = 4
+}
+
 resource "aws_instance" "demo" {
   ami           = "ami-12345678"
   instance_type = "t2.micro"
+
+  tags = {
+    Name = "AutoInstance-${random_id.instance_suffix.hex}"
+  }
 }
