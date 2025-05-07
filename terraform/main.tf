@@ -7,7 +7,7 @@ provider "aws" {
   skip_credentials_validation = true
 
   endpoints {
-    ec2 = "http://ip10-0-6-4-d0dgqa805akh4glkf8qg-4566.direct.lab-boris.fr/"
+    ec2 = "http://ip10-0-2-4-d0dgq9005akh4glkf8o0-4566.direct.lab-boris.fr"
   }
 }
 
@@ -20,7 +20,7 @@ resource "random_id" "commit_simulation" {
 }
 
 resource "aws_instance" "demo" {
-  ami           = "ami-${random_id.commit_simulation.hex}" # fictif mais uniquejbjjkbbijbjk
+  ami           = "ami-${random_id.commit_simulation.hex}"
   instance_type = "t2.micro"
 
   tags = {
