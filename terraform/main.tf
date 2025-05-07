@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.0"
-    }
-  }
-}
-
 provider "aws" {
   region                      = "us-east-1"
   access_key                  = "test"
@@ -18,20 +5,33 @@ provider "aws" {
   skip_requesting_account_id  = true
   skip_metadata_api_check     = true
   skip_credentials_validation = true
+
   endpoints {
-    ec2 = "http://ip10-0-2-4-d0dgq9005akh4glkf8o0-4566.direct.lab-boris.fr"
+    ec2 = "http://ip10-0-6-4-d0dgqa805akh4glkf8qg-4566.direct.lab-boris.fr/"
   }
 }
 
-resource "random_id" "instance_suffix" {
+resource "random_id" "commit_simulation" {
+  keepers = {
+    always_change = timestamp() 
+  }
+
   byte_length = 4
 }
 
 resource "aws_instance" "demo" {
-  ami           = "ami-12345678"
+  ami           = "ami-${random_id.commit_simulation.hex}" # fictif mais uniquejbjjkbbijbjk
   instance_type = "t2.micro"
 
   tags = {
-    Name = "AutoInstance-${random_id.instance_suffix.hex}"
+    Name = "Instance-${random_id.commit_simulation.hex}"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+output "created_instance_id" {
+  value = aws_instance.demo.id
 }
